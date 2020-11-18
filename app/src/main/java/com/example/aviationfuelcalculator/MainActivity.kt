@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,22 +29,32 @@ class MainActivity : AppCompatActivity() {
             var liters  = litersString.toIntOrNull()
 
             // create a Toast with some text, to appear for a short time
-            val myToast = Toast.makeText(applicationContext , fuelDensityString, Toast.LENGTH_SHORT)
-            // show the Toast
-            myToast.show()
+            //val myToast = Toast.makeText(applicationContext , fuelDensityString, Toast.LENGTH_SHORT)
+            //myToast.show()
 
-            // if (a > b) {
-            //    max = a
-            //} else {
-            //    max = b
-            //}
+            // if (age < 10) {
+            //    println("You're too young to watch this movie")
+            // } else if (age < 13) {
+            //    println("You can watch this movie with a parent")
+            // }  else {
+            //    println("You can watch this movie")
+            // }
 
             // if kilograms   is null and liters is not null        : kgs = liters/density
             if (kgs == null && liters != null) {
-                val k = liters*density!!
+                val myToast = Toast.makeText(applicationContext , "kgs == null && liters != null", Toast.LENGTH_SHORT)
+                myToast.show()
+                val k = (liters*density!!).roundToInt()
                 editKilograms.setText(k.toString())
+
+            } else if (liters == null && kgs != null) {
+                // else if liters is null and kilograms is not null : liters = kgs*density
+                val myToast = Toast.makeText(applicationContext , "liters == null && kgs != null", Toast.LENGTH_SHORT)
+                myToast.show()
+                val l = (kgs/density!!).roundToInt()
+                editLiters.setText(l.toString())
+
             }
-            // else if liters is null and kilograms is not null     : liters = kgs*density
             // else if liters is not null and kilograms is not null : kgs = liters/density
 
             // editKilograms.setText(fuelDensityString)
