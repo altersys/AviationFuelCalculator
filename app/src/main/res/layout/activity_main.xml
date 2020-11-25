@@ -7,78 +7,86 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editTextNumberKgs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="93dp"
-        android:layout_marginLeft="93dp"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="108dp"
-        android:layout_marginRight="108dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
         android:id="@+id/editTextNumberDecimalDensity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="93dp"
-        android:layout_marginLeft="93dp"
-        android:layout_marginEnd="108dp"
-        android:layout_marginRight="108dp"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
         android:ems="10"
-        android:inputType="numberDecimal"
+        android:inputType="textNoSuggestions|numberDecimal"
+        android:isScrollContainer="false"
+        android:keepScreenOn="false"
         android:text="0.79"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumberLiters"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/densityTextView"
         app:layout_constraintTop_toBottomOf="@+id/editTextNumberKgs" />
 
     <EditText
-        android:id="@+id/editTextNumberLiters"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="94dp"
-        android:layout_marginLeft="94dp"
-        android:layout_marginEnd="107dp"
-        android:layout_marginRight="107dp"
-        android:layout_marginBottom="292dp"
+        android:id="@+id/editTextNumberKgs"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:inputType="textNoSuggestions|textFilter|number"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/kilogramsTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextNumberLiters"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:ems="10"
+        android:inputType="textNoSuggestions|number"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/litersTextView"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimalDensity" />
 
     <TextView
         android:id="@+id/kilogramsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="Kilograms:"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumberKgs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="140dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:text="KG:"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toStartOf="@+id/editTextNumberKgs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/densityTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="11dp"
-        android:text="Density:"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumberDecimalDensity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="140dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="9dp"
+        android:text="@string/density"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/litersTextView"
+        app:layout_constraintEnd_toStartOf="@+id/editTextNumberDecimalDensity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/kilogramsTextView" />
 
     <TextView
         android:id="@+id/litersTextView"
+        android:layout_width="140dp"
+        android:layout_height="60dp"
+        android:text="@string/liters"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toStartOf="@+id/editTextNumberLiters"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/densityTextView" />
+
+    <TextView
+        android:id="@+id/errorTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
-        android:text="Liters:"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumberLiters"
+        android:text="Invalid input data"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="#F00"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/litersTextView" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

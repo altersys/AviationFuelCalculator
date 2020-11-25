@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">AviationFuelCalculator</string>
+    <string name="app_name">Aviation Fuel Calculator</string>
+    <string name="density">density:</string>
+    <string name="liters">liters:</string>
 </resources>

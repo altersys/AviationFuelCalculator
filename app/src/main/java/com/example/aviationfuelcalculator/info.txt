@@ -1,0 +1,9 @@
+View Hierarchy
+
+
+View -> ViewGroup
+     -> CustomView
+
+
+
+1. TODO: layout the XMLs with percents

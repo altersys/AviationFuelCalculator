@@ -1,14 +1,25 @@
 package com.example.aviationfuelcalculator
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.EditText
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import kotlin.math.roundToInt
 
+// app is crashing when trying to input , into int fields
+// how to get fucking keyboard forced on
+// change color of app main bar
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var densityText: EditText
+    private lateinit var litersText: EditText
+    private lateinit var kilogramsText: EditText
+    private lateinit var errorText: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // kilogram calculation mode or liters calculation mode
@@ -16,50 +27,13 @@ class MainActivity : AppCompatActivity() {
         var calcLitersMode = false
 
 
-        val densityText = findViewById<EditText>(R.id.editTextNumberDecimalDensity)
-        val litersText = findViewById<EditText>(R.id.editTextNumberLiters)
-        val kilogramsText = findViewById<EditText>(R.id.editTextNumberKgs)
-
-        // setting mode of calculation: liters to kgs or kgs to liters
-        // fun setMode(){
-        //
-        // }
-
-        fun calculate() {
-
-            val editDensity = findViewById<EditText>(R.id.editTextNumberDecimalDensity)
-            val editKilograms = findViewById<EditText>(R.id.editTextNumberKgs)
-            val editLiters = findViewById<EditText>(R.id.editTextNumberLiters)
-
-            val fuelDensityString = editDensity.text.toString()
-            val kilogramsString = editKilograms.text.toString()
-            val litersString = editLiters.text.toString()
-
-            // Convert value to a number
-            var density = fuelDensityString.toFloatOrNull()
-            var kgs = kilogramsString.toIntOrNull()
-            var liters = litersString.toIntOrNull()
-
-            val myToast = Toast.makeText(applicationContext, "in calcKilogramsMode: " + calcKilogramsMode + " in calcLitersMode:" + calcLitersMode, Toast.LENGTH_SHORT)
-            myToast.show()
-            if (calcKilogramsMode) {
-                //  val myToast = Toast.makeText(applicationContext , "in calcKilogramsMode", Toast.LENGTH_SHORT)
-                //  myToast.show()
-                val k = (liters!! * density!!).roundToInt()
-                editKilograms.setText(k.toString())
-
-            } else if (calcLitersMode) {
-
-                // val myToast = Toast.makeText(applicationContext , "in calcLitersMode", Toast.LENGTH_SHORT)
-                // myToast.show()
-                val l = (kgs!! / density!!).roundToInt()
-                editLiters.setText(l.toString())
-
-            }
-        }
+        densityText = findViewById(R.id.editTextNumberDecimalDensity)
+        litersText = findViewById(R.id.editTextNumberLiters)
+        kilogramsText = findViewById(R.id.editTextNumberKgs)
+        errorText = findViewById(R.id.errorTextView)
 
         densityText.addTextChangedListener {
-            calculate()
+            calculate(calcKilogramsMode, calcLitersMode)
         }
 
         litersText.addTextChangedListener {
@@ -67,12 +41,14 @@ class MainActivity : AppCompatActivity() {
             // do not activate mode if text was changed by program
             if (litersText.hasFocus()) {
                 calcKilogramsMode = true
-                calcLitersMode    = false
+                calcLitersMode = false
                 // even if we have just set mode, remove it,
                 // as it is impossible to follow because text is empty
                 if (litersText.text.isEmpty()) {
                     calcKilogramsMode = false
                 }
+                // try to calculate anyway even if liters are empty
+                calculate(calcKilogramsMode, calcLitersMode)
             }
         }
 
@@ -81,15 +57,59 @@ class MainActivity : AppCompatActivity() {
             // only if textedit has focus, activate mode
             // do not activate mode if text was changed by program
             if (kilogramsText.hasFocus()) {
-                calcLitersMode    = true
+                calcLitersMode = true
                 calcKilogramsMode = false
                 // even if we have just set mode, remove it,
                 // as it is impossible to follow because text is empty
                 if (kilogramsText.text.isEmpty()) {
                     calcLitersMode = false
                 }
+                // try to calculate anyway even if kilograms are empty
+                calculate(calcKilogramsMode, calcLitersMode)
             }
+
         }
     }
+
+    fun calculate(calcKilogramsMode: Boolean, calcLitersMode: Boolean) {
+
+        val fuelDensityString = densityText.text.toString()
+        val kilogramsString = kilogramsText.text.toString()
+        val litersString = litersText.text.toString()
+
+        // Convert value to a number
+        val density = fuelDensityString.toFloatOrNull()
+        val kgs = kilogramsString.toIntOrNull()
+        val liters = litersString.toIntOrNull()
+        if (density == null || density <= 0.0) {
+            errorText.visibility = View.VISIBLE
+            return
+        }
+
+        if (kgs == null && liters == null) {
+            errorText.visibility = View.VISIBLE
+            return
+        }
+
+        errorText.visibility = View.GONE
+
+        Log.d("calculationMode", "in calcKilogramsMode: $calcKilogramsMode in calcLitersMode: $calcLitersMode")
+
+        if (calcKilogramsMode) {
+            //  val myToast = Toast.makeText(applicationContext , "in calcKilogramsMode", Toast.LENGTH_SHORT)
+            //  myToast.show()
+            val k = (liters!! * density).roundToInt()
+            kilogramsText.setText(k.toString())
+
+        } else if (calcLitersMode) {
+
+            // val myToast = Toast.makeText(applicationContext , "in calcLitersMode", Toast.LENGTH_SHORT)
+            // myToast.show()
+            val l = (kgs!! / density).roundToInt()
+            litersText.setText(l.toString())
+        }
+    }
+
+
 }
 
