@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun calculate(calcKilogramsMode: Boolean, calcLitersMode: Boolean) {
+    private fun calculate(calcKilogramsMode: Boolean, calcLitersMode: Boolean) {
 
         val fuelDensityString = densityText.text.toString()
         val kilogramsString = kilogramsText.text.toString()
@@ -81,6 +81,12 @@ class MainActivity : AppCompatActivity() {
         val density = fuelDensityString.toFloatOrNull()
         val kgs = kilogramsString.toIntOrNull()
         val liters = litersString.toIntOrNull()
+
+        if (calcKilogramsMode == calcLitersMode) {
+            errorText.visibility = View.VISIBLE
+            return
+        }
+
         if (density == null || density <= 0.0) {
             errorText.visibility = View.VISIBLE
             return
@@ -91,25 +97,30 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        errorText.visibility = View.GONE
-
-        Log.d("calculationMode", "in calcKilogramsMode: $calcKilogramsMode in calcLitersMode: $calcLitersMode")
-
         if (calcKilogramsMode) {
-            //  val myToast = Toast.makeText(applicationContext , "in calcKilogramsMode", Toast.LENGTH_SHORT)
-            //  myToast.show()
-            val k = (liters!! * density).roundToInt()
-            kilogramsText.setText(k.toString())
+            if (liters == null) {
+                errorText.visibility = View.VISIBLE
+                return
+            } else {
+                errorText.visibility = View.GONE
+                val k = (liters * density).roundToInt()
+                kilogramsText.setText(k.toString())
+                return
+            }
+        }
 
-        } else if (calcLitersMode) {
-
-            // val myToast = Toast.makeText(applicationContext , "in calcLitersMode", Toast.LENGTH_SHORT)
-            // myToast.show()
-            val l = (kgs!! / density).roundToInt()
-            litersText.setText(l.toString())
+        if (calcLitersMode) {
+            if (kgs == null) {
+                errorText.visibility = View.VISIBLE
+                return
+            } else {
+                errorText.visibility = View.GONE
+                val l = (kgs / density).roundToInt()
+                litersText.setText(l.toString())
+                return
+            }
         }
     }
-
 
 }
 
