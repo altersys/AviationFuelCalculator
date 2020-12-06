@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculate(calcKilogramsMode: Boolean, calcLitersMode: Boolean) {
-
+        Log.d("calculationMode","Invoking calculate. calcKilogramsMode: $calcKilogramsMode, calcLitersMode: $calcLitersMode")
         val fuelDensityString = densityText.text.toString()
         val kilogramsString = kilogramsText.text.toString()
         val litersString = litersText.text.toString()
