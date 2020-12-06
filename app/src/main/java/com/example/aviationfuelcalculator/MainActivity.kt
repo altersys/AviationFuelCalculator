@@ -8,6 +8,70 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import kotlin.math.roundToInt
 
+class FuelCalculator(calcKilogramsMode: Boolean, calcLitersMode: Boolean,fuelDensityString: String,kilogramsString: String,litersString: String) {
+
+    // Convert value to a number
+    val density = fuelDensityString.toFloatOrNull()
+    val kgs = kilogramsString.toIntOrNull()
+    val liters = litersString.toIntOrNull()
+    var k = kgs
+    var l = liters
+
+
+    init {
+        Log.d("FuelCalc", "initializing with: $calcKilogramsMode, $calcLitersMode,$fuelDensityString,$kilogramsString,$litersString")
+        calculate(calcKilogramsMode,calcLitersMode)
+    }
+
+    private fun calculate(calcKilogramsMode: Boolean, calcLitersMode: Boolean) {
+        Log.d("calculationMode","Invoking calculate. calcKilogramsMode: $calcKilogramsMode, calcLitersMode: $calcLitersMode")
+
+        if (calcKilogramsMode == calcLitersMode) {
+            Log.d("invalidData", "Invalid data: calcKilogramsMode == calcLitersMode")
+            return
+        }
+
+        if (density == null || density <= 0.0) {
+            Log.d("invalidData", "Invalid data: density == null || density <= 0.0")
+            return
+        }
+
+        if (kgs == null && liters == null) {
+            Log.d("invalidData", "Invalid data: kgs == null && liters == null")
+            return
+        }
+
+        if (calcKilogramsMode) {
+            if (liters == null) {
+                Log.d("invalidData", "Invalid data: liters == null")
+                return
+            } else {
+                Log.d("okData", "Data entered is ok")
+                k = (liters * density).roundToInt()
+                //kilogramsText.setText(k.toString())
+                return
+            }
+        }
+
+        if (calcLitersMode) {
+            if (kgs == null) {
+                Log.d("invalidData", "Invalid data: kgs == null")
+                return
+            } else {
+                Log.d("okData", "Data entered is ok")
+                l = (kgs / density).roundToInt()
+                //litersText.setText(l.toString())
+                return
+            }
+        }
+        Log.d("end", "End of calculate")
+    }
+
+}
+
+
+
+
 // app is crashing when trying to input , into int fields
 // how to get fucking keyboard forced on
 // change color of app main bar
@@ -17,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var litersText: EditText
     private lateinit var kilogramsText: EditText
     private lateinit var errorText: View
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -32,8 +97,14 @@ class MainActivity : AppCompatActivity() {
         kilogramsText = findViewById(R.id.editTextNumberKgs)
         errorText = findViewById(R.id.errorTextView)
 
+
+
         densityText.addTextChangedListener {
-            calculate(calcKilogramsMode, calcLitersMode)
+            calculate(calcKilogramsMode,
+                    calcLitersMode,
+                    densityText,
+                    kilogramsText,
+                    litersText)
         }
 
         litersText.addTextChangedListener {
@@ -48,7 +119,11 @@ class MainActivity : AppCompatActivity() {
                     calcKilogramsMode = false
                 }
                 // try to calculate anyway even if liters are empty
-                calculate(calcKilogramsMode, calcLitersMode)
+                calculate(calcKilogramsMode,
+                        calcLitersMode,
+                        densityText,
+                        kilogramsText,
+                        litersText)
             }
         }
 
@@ -65,62 +140,44 @@ class MainActivity : AppCompatActivity() {
                     calcLitersMode = false
                 }
                 // try to calculate anyway even if kilograms are empty
-                calculate(calcKilogramsMode, calcLitersMode)
+                calculate(calcKilogramsMode,
+                        calcLitersMode,
+                        densityText,
+                        kilogramsText,
+                        litersText)
             }
-
         }
     }
+    // invokes FuelCalculator class to make calculations
+    // changes text in UI elements
+    private fun calculate(calcKilogramsMode: Boolean,
+                          calcLitersMode: Boolean,
+                          densityText: EditText,
+                          kilogramsText: EditText,
+                          litersText: EditText) {
+        var fuelDensityString = densityText.text.toString()
+        var kilogramsString = kilogramsText.text.toString()
+        var litersString = litersText.text.toString()
 
-    private fun calculate(calcKilogramsMode: Boolean, calcLitersMode: Boolean) {
-        Log.d("calculationMode","Invoking calculate. calcKilogramsMode: $calcKilogramsMode, calcLitersMode: $calcLitersMode")
-        val fuelDensityString = densityText.text.toString()
-        val kilogramsString = kilogramsText.text.toString()
-        val litersString = litersText.text.toString()
-
-        // Convert value to a number
-        val density = fuelDensityString.toFloatOrNull()
-        val kgs = kilogramsString.toIntOrNull()
-        val liters = litersString.toIntOrNull()
-
-        if (calcKilogramsMode == calcLitersMode) {
-            errorText.visibility = View.VISIBLE
-            return
-        }
-
-        if (density == null || density <= 0.0) {
-            errorText.visibility = View.VISIBLE
-            return
-        }
-
-        if (kgs == null && liters == null) {
-            errorText.visibility = View.VISIBLE
-            return
-        }
-
+        var fuelCalc =  FuelCalculator(
+                calcKilogramsMode,
+                calcLitersMode,
+                fuelDensityString,
+                kilogramsString,
+                litersString)
         if (calcKilogramsMode) {
-            if (liters == null) {
-                errorText.visibility = View.VISIBLE
-                return
-            } else {
-                errorText.visibility = View.GONE
-                val k = (liters * density).roundToInt()
-                kilogramsText.setText(k.toString())
-                return
-            }
+            Log.d("calcMode", "Returning k")
+            kilogramsText.setText(fuelCalc.k.toString())
+            return
         }
-
         if (calcLitersMode) {
-            if (kgs == null) {
-                errorText.visibility = View.VISIBLE
-                return
-            } else {
-                errorText.visibility = View.GONE
-                val l = (kgs / density).roundToInt()
-                litersText.setText(l.toString())
-                return
-            }
+            Log.d("calcMode", "Returning l")
+            litersText.setText(fuelCalc.l.toString())
+            return
         }
+        Log.d("calcMode", "No mode provided")
+        return
     }
-
 }
+
 
